@@ -39,7 +39,7 @@ import sys
 sys.path.append('.')
 
 from tools.midi import midifile
-from hardware.tools.hexfile import hexfile
+from tools.hexfile import hexfile
 
 
 def CreateMidifile(
