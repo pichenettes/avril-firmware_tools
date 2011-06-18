@@ -20,7 +20,7 @@
 usage:
   python wavetable2sysex.py \
     [--output_file path_to/wavetable.mid] \
-    path_to/firmware.hex
+    path_to/wavetable_2048_samples.raw
 """
 
 import logging
