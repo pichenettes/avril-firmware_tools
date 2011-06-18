@@ -18,7 +18,7 @@
 """Utility for building a "user" wavetable to be sent by SysEx.
 
 usage:
-  python wavetable2sysex.py \
+  python tools/wavetable2sysex/wavetable2sysex.py \
     [--output_file path_to/wavetable.mid] \
     path_to/wavetable_2048_samples.raw
 """
