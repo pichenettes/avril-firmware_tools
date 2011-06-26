@@ -33,6 +33,7 @@ usage:
 import logging
 import optparse
 import os
+import struct
 import sys
 
 # Allows the code to be run from the project root directory
@@ -74,7 +75,7 @@ def CreateMidifile(
     block += '\x00' * padding
     event = midifile.SysExEvent(
         options.manufacturer_id,
-        options.device_id,
+        struct.pack('>h', options.device_id),
         options.update_command + midifile.Nibblize(block))
     t.AddEvent(time, event)
     syx_data.append(event.raw_message)
@@ -82,7 +83,7 @@ def CreateMidifile(
     time += int(delay / 1000.0 / 0.5 * 96)
   event = midifile.SysExEvent(
       options.manufacturer_id,
-      options.device_id,
+      struct.pack('>h', options.device_id),
       options.reset_command)
   t.AddEvent(time, event)
   syx_data.append(event.raw_message)
@@ -128,7 +129,8 @@ if __name__ == '__main__':
       '-v',
       '--device_id',
       dest='device_id',
-      default='\x00\x02',
+      type='int',
+      default=2,
       help='Device ID to use in SysEx message')
   parser.add_option(
       '-u',
