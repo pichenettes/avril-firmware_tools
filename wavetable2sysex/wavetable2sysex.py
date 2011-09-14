@@ -77,7 +77,7 @@ if __name__ == '__main__':
       '-m',
       '--manufacturer_id',
       dest='manufacturer_id',
-      default='\x00\x20\x77',
+      default='\x00\x21\x02',
       help='Manufacturer ID to use in SysEx message')
   parser.add_option(
       '-v',
