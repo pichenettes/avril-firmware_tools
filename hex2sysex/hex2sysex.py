@@ -84,7 +84,7 @@ def CreateMidifile(
     # ms -> s -> beats -> ticks
     time += int(delay / 1000.0 / 0.5 * 96)
   event = midifile.SysExEvent(
-      options.manufacturer_id,
+      mfr_id,
       struct.pack('>h', options.device_id),
       options.reset_command)
   t.AddEvent(time, event)
