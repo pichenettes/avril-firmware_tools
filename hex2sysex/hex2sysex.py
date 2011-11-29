@@ -73,8 +73,10 @@ def CreateMidifile(
     block = ''.join(map(chr, data[i:i+page_size]))
     padding = page_size - len(block)
     block += '\x00' * padding
+    mfr_id = options.manufacturer_id if not \
+        options.force_obsolete_manufacturer_id else '\x00\x20\x77'
     event = midifile.SysExEvent(
-        options.manufacturer_id,
+        mfr_id,
         struct.pack('>h', options.device_id),
         options.update_command + midifile.Nibblize(block))
     t.AddEvent(time, event)
@@ -82,7 +84,7 @@ def CreateMidifile(
     # ms -> s -> beats -> ticks
     time += int(delay / 1000.0 / 0.5 * 96)
   event = midifile.SysExEvent(
-      options.manufacturer_id,
+      mfr_id,
       struct.pack('>h', options.device_id),
       options.reset_command)
   t.AddEvent(time, event)
@@ -123,8 +125,15 @@ if __name__ == '__main__':
       '-m',
       '--manufacturer_id',
       dest='manufacturer_id',
-      default='\x00\x20\x77',
+      default='\x00\x21\x02',
       help='Manufacturer ID to use in SysEx message')
+  parser.add_option(
+      '-b',
+      '--obsolete_manufacturer_id',
+      dest='force_obsolete_manufacturer_id',
+      default=False,
+      action='store_true',
+      help='Force the use of the manufacturer ID used in early products')
   parser.add_option(
       '-v',
       '--device_id',
