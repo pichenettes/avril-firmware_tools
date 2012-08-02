@@ -23,7 +23,6 @@
 """
 
 import bisect
-import copy
 import math
 import struct
 
@@ -454,28 +453,34 @@ class Reader(object):
     event_type = event_byte & 0xf0
     channel = event_byte & 0xf
     channel += 1
-    self._previous_status = event_type
     if event_type == 0x80:
+      self._previous_status = event_type
       note = ord(f.read(1))
       velo = ord(f.read(1))
       event = NoteOffEvent(channel, note, velo)
       size += 2
     elif event_type == 0x90:
+      self._previous_status = event_type
       event = NoteOnEvent(channel, ord(f.read(1)), ord(f.read(1)))
       size += 2
     elif event_type == 0xa0:
+      self._previous_status = event_type
       event = KeyAftertouchEvent(channel, ord(f.read(1)), ord(f.read(1)))
       size += 2
     elif event_type == 0xb0:
+      self._previous_status = event_type
       event = ControlChangeEvent(channel, ord(f.read(1)), ord(f.read(1)))
       size += 2
     elif event_type == 0xc0:
+      self._previous_status = event_type
       event = ProgramChangeEvent(channel, ord(f.read(1)))
       size += 1
     elif event_type == 0xd0:
+      self._previous_status = event_type
       event = ChannelAftertouchEvent(channel, ord(f.read(1)))
       size += 1
     elif event_type == 0xe0:
+      self._previous_status = event_type
       event = PitchBendEvent(channel, (ord(f.read(1)) << 7) | ord(f.read(1)))
       size += 2
     elif event_byte == 0xff:
@@ -515,7 +520,11 @@ class Reader(object):
         event = KeyEvent(ord(bytes[0]), ord(bytes[1]))
       elif event_type == 0x7f:
         event = BlobEvent(bytes)
-    elif event_type == 0xf0:
+    elif event_byte == 0xf0:
+      event_size, event_size_size = self._ReadVariableLengthInteger(f)
+      size += event_size_size
+      bytes = f.read(event_size)
+      size += event_size
       event = SysExEvent(bytes[0:3], bytes[3:5], bytes[5:-1])
     else:
       print event_byte, '!!'
