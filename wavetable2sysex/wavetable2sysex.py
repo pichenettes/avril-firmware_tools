@@ -111,7 +111,7 @@ if __name__ == '__main__':
     logging.fatal('Specify at least one wavetable .bin file!')
     sys.exit(1)
   for f in args:
-    data = map(ord, file(f).read())
+    data = map(ord, file(f, 'rb').read())
     assert len(data) == 2048
     if not data:
       logging.fatal('Error while loading .bin file')
